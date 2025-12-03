@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mehmat-microservice-config
+data:
+  PORT: "3000"
+  NODE_ENV: "production"
