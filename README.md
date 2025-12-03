@@ -16,7 +16,8 @@ This project contains:
 .
 ├── server.js                 # Node.js microservice application
 ├── package.json              # Node.js dependencies
-├── Dockerfile                # Docker image configuration
+├── Dockerfile                # Docker image configuration (development/demo)
+├── Dockerfile.production     # Production-ready Docker configuration
 ├── .dockerignore            # Docker ignore file
 ├── k8s/                     # Kubernetes manifests
 │   ├── deployment.yaml      # Deployment configuration
@@ -97,6 +98,11 @@ az aks update --resource-group mehmat-rg --name mehmat-aks-cluster --attach-acr 
 
 ```bash
 docker build -t mehmat-microservice:latest .
+```
+
+**For Production:** Use the production Dockerfile which includes additional security features:
+```bash
+docker build -f Dockerfile.production -t mehmat-microservice:latest .
 ```
 
 #### Step 2: Tag and Push to ACR
