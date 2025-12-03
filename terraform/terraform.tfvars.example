@@ -1,0 +1,22 @@
+# Example terraform.tfvars file
+# Copy this file to terraform.tfvars and update the values as needed
+
+resource_group_name = "mehmat-aks-rg"
+location            = "East US"
+cluster_name        = "mehmat-aks-cluster"
+dns_prefix          = "mehmat-aks"
+kubernetes_version  = "1.27.7"
+
+# Node pool configuration
+node_count          = 2
+vm_size             = "Standard_D2s_v3"
+enable_auto_scaling = true
+min_node_count      = 1
+max_node_count      = 5
+
+# Tags
+tags = {
+  Environment = "Development"
+  Project     = "Mehmat-AKS"
+  ManagedBy   = "Terraform"
+}
