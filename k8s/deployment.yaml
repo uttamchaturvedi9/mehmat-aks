@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mehmat-microservice
+  labels:
+    app: mehmat-microservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mehmat-microservice
+  template:
+    metadata:
+      labels:
+        app: mehmat-microservice
+    spec:
+      containers:
+      - name: mehmat-microservice
+        image: <YOUR_ACR_NAME>.azurecr.io/mehmat-microservice:latest
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: mehmat-microservice-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10

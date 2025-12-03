@@ -1,0 +1,21 @@
+{
+  "name": "mehmat-microservice",
+  "version": "1.0.0",
+  "description": "Sample microservice for AKS deployment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "microservice",
+    "kubernetes",
+    "aks",
+    "docker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
