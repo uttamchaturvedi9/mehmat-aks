@@ -18,10 +18,24 @@ namespace Shopping.Client.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var response = await _httpClient.GetAsync("/product");
-            var content = await response.Content.ReadAsStringAsync();
-            var productList = JsonConvert.DeserializeObject<IEnumerable<Product>>(content);
-            return View(productList);
+            try
+            {
+                var response = await _httpClient.GetAsync("/api/product");
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var productList = JsonConvert.DeserializeObject<IEnumerable<Product>>(content);
+                return View(productList);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error calling Shopping API");
+                return View(new List<Product>());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error in Index action");
+                return View(new List<Product>());
+            }
         }
 
         public IActionResult Privacy()
