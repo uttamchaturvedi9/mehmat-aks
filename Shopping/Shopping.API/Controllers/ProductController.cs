@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using Shopping.API.Models;
 using Shopping.API.Data;
+using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace Shopping.API.Controllers
 {
@@ -9,37 +12,35 @@ namespace Shopping.API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly ProductContext _context;
         private readonly ILogger<ProductController> _logger;
-        public ProductController(ILogger<ProductController> logger)
+
+        public ProductController(ProductContext context, ILogger<ProductController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
             _logger.LogInformation("Fetching all products");
-            return Ok(GetProducts());
+            var products = await GetProducts();
+            return Ok(products);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Product> GetById(string id)
+        //private IEnumerable<Product> GetProducts()
+        //{
+        //    return ProductContext.Products;         
+
+        //}
+        private async Task<IEnumerable<Product>> GetProducts()
         {
-            var product = GetProducts().FirstOrDefault(p => p.Id == id);
-
-            if (product is null)
-            {
-                _logger.LogWarning("Product with id {ProductId} not found", id);
-                return NotFound();
-            }
-
-            return Ok(product);
+            return await _context
+                .Products
+                .Find(p => true)
+                .ToListAsync();
         }
 
-        private IEnumerable<Product> GetProducts()
-        {
-            return ProductContext.Products;         
-
-        }
     }
 }
