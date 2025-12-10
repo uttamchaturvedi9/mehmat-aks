@@ -37,4 +37,3 @@ namespace Shopping.Client;
         app.Run();
     }
 }
-

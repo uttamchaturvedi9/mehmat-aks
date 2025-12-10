@@ -28,12 +28,7 @@ namespace Shopping.API.Controllers
             var products = await GetProducts();
             return Ok(products);
         }
-
-        //private IEnumerable<Product> GetProducts()
-        //{
-        //    return ProductContext.Products;         
-
-        //}
+      
         private async Task<IEnumerable<Product>> GetProducts()
         {
             return await _context
