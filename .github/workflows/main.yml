@@ -1,29 +1,40 @@
-name: CI
+name: Build and Push to ACR
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+env:
+  REGISTRY: shoppingacr-axffdchcbfhxh5dr.azurecr.io
+  IMAGE_REPOSITORY: uttamchaturvedimehmataks
+  DOCKERFILE_PATH: Shopping/Shopping.API/Dockerfile
 
 jobs:
-  build-and-test:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Azure login
+        uses: azure/login@v2
         with:
-          dotnet-version: '8.0.x'
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Restore
-        run: dotnet restore
+      - name: Docker login to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE_PATH }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:${{ github.run_number }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPOSITORY }}:latest
